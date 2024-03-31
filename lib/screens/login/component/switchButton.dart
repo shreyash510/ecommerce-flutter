@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ecommerce/common/secureStorage.dart';
 
 class SwitchButton extends StatefulWidget {
-  const SwitchButton({super.key});
+  const SwitchButton({Key? key}) : super(key: key);
 
   @override
   State<SwitchButton> createState() => _SwitchButtonState();
 }
 
 class _SwitchButtonState extends State<SwitchButton> {
-  bool light = true;
+  SecureStorageHelper storage = SecureStorageHelper();
+// Read an item by key
+// String? itemValue = await storage.readItem('key_to_read');
+
+// print(itemValue);
+
+  bool flag = true;
+
+  Future<void> _setThemeState(bool isDark) async {
+    // print('isDark: $isDark'); // Print the value of isDark
+    await storage.addItem("isDark", isDark);
+    // print(await storage.readItem("isDark"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +34,14 @@ class _SwitchButtonState extends State<SwitchButton> {
           child: FittedBox(
             child: Switch(
               // This bool value toggles the switch.
-              value: light,
+              value: flag,
               activeColor: Theme.of(context).colorScheme.primary,
               onChanged: (bool value) {
                 // This is called when the user toggles the switch.
-                print(value);
                 setState(() {
-                  light = value;
+                  flag = value; // Update the switch state
                 });
+                _setThemeState(value); // Set the theme state in secure storage
               },
             ),
           )),
